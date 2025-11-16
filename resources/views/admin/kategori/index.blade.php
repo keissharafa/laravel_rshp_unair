@@ -46,11 +46,6 @@
                                         <td><strong>{{ $kategori->nama_kategori }}</strong></td>
                                         <td>{{ $kategori->deskripsi ?? '-' }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.kategori.show', $kategori->idkategori) }}" 
-                                               class="btn btn-sm btn-info text-white me-1" 
-                                               title="Detail">
-                                                Detail
-                                            </a>
                                             <a href="{{ route('admin.kategori.edit', $kategori->idkategori) }}" 
                                                class="btn btn-sm btn-warning text-white me-1" 
                                                title="Edit">

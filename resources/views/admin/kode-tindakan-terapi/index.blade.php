@@ -35,7 +35,7 @@
                                     <tr>
                                         <th width="5%" class="text-center">No</th>
                                         <th width="10%">Kode</th>
-                                        <th width="30%">Deskripsi Tindakan</th>
+                                        <th width="30%">Deskripsi Tindakan Terapi</th>
                                         <th width="15%">Kategori</th>
                                         <th width="15%">Kategori Klinis</th>
                                         <th width="20%" class="text-center">Aksi</th>
@@ -50,11 +50,6 @@
                                         <td>{{ $kt->kategori->nama_kategori ?? '-' }}</td>
                                         <td>{{ $kt->kategoriKlinis->nama_kategori_klinis ?? '-' }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.kode-tindakan-terapi.show', $kt->idkode_tindakan_terapi) }}" 
-                                               class="btn btn-sm btn-info me-1" 
-                                               title="Detail">
-                                                Detail
-                                            </a>
                                             <a href="{{ route('admin.kode-tindakan-terapi.edit', $kt->idkode_tindakan_terapi) }}" 
                                                class="btn btn-sm btn-warning me-1" 
                                                title="Edit">

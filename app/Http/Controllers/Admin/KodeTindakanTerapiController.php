@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\KodeTindakanTerapi;
+use App\Models\Kategori;
+use App\Models\KategoriKlinis;
 use Illuminate\Http\Request;
 
 class KodeTindakanTerapiController extends Controller
@@ -39,10 +41,13 @@ class KodeTindakanTerapiController extends Controller
     }
 
     public function edit($id)
-    {
-        $kodeTindakan = KodeTindakanTerapi::findOrFail($id);
-        return view('admin.kode-tindakan-terapi.edit', compact('kodeTindakan'));
-    }
+{
+    $kodeTindakan = KodeTindakanTerapi::findOrFail($id);
+    $kategoris = Kategori::all();
+    $kategoriKlinis = KategoriKlinis::all();
+    
+    return view('admin.kode-tindakan-terapi.edit', compact('kodeTindakan', 'kategoris', 'kategoriKlinis'));
+}
 
     public function update(Request $request, $id)
     {

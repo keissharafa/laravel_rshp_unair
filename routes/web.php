@@ -39,11 +39,7 @@ Route::middleware(['auth'])->group(function () {
     // ADMIN
     Route::middleware('isAdministrator')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
-
-        Route::get('/jenis-hewan', [JenisHewanController::class, 'index'])->name('jenis-hewan.index');
-        Route::get('/jenis-hewan/create', [JenisHewanController::class, 'create'])->name('jenis-hewan.create');
-        Route::post('/jenis-hewan/store', [JenisHewanController::class, 'store'])->name('jenis-hewan.store');
-
+    Route::resource('jenis-hewan', JenisHewanController::class)->except(['show']);
         Route::resource('pemilik', PemilikController::class);
         Route::resource('user', UserController::class);
         Route::resource('ras-hewan', RasHewanController::class);

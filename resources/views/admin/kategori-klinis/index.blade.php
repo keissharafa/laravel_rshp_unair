@@ -34,8 +34,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th width="5%" class="text-center">No</th>
-                                        <th width="25%">Nama Kategori Klinis</th>
-                                        <th width="50%">Keterangan</th>
+                                        <th width="75%">Nama Kategori Klinis</th>
                                         <th width="20%" class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -44,13 +43,7 @@
                                     <tr>
                                         <td class="text-center">{{ $index + 1 }}</td>
                                         <td><strong>{{ $kk->nama_kategori_klinis }}</strong></td>
-                                        <td>{{ $kk->keterangan ?? '-' }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.kategori-klinis.show', $kk->idkategori_klinis) }}" 
-                                               class="btn btn-sm btn-info me-1" 
-                                               title="Detail">
-                                                Detail
-                                            </a>
                                             <a href="{{ route('admin.kategori-klinis.edit', $kk->idkategori_klinis) }}" 
                                                class="btn btn-sm btn-warning me-1" 
                                                title="Edit">

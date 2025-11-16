@@ -41,6 +41,57 @@ class JenisHewanController extends Controller
                         ->with('success', 'Jenis hewan berhasil ditambahkan.');
     }
 
+    // edit: buat manggil form edit
+    public function edit($id)
+    {
+        // query builder
+        $jenisHewan = DB::table('jenis_hewan')
+            ->where('idjenis_hewan', $id)
+            ->first();
+
+        if (!$jenisHewan) {
+            return redirect()->route('admin.jenis-hewan.index')
+                ->with('error', 'Data jenis hewan tidak ditemukan.');
+        }
+
+        return view('admin.jenis-hewan.edit', compact('jenisHewan'));
+    }
+
+    // update: buat update data
+    public function update(Request $request, $id)
+    {
+        // Validasi input dengan id untuk unique validation
+        $validatedData = $this->validateJenisHewan($request, $id);
+
+        // Helper untuk update data
+        $this->updateJenisHewan($id, $validatedData);
+
+        return redirect()->route('admin.jenis-hewan.index')
+                        ->with('success', 'Jenis hewan berhasil diupdate.');
+    }
+
+    // destroy: buat hapus data
+    public function destroy($id)
+    {
+        try {
+            // query builder
+            $deleted = DB::table('jenis_hewan')
+                ->where('idjenis_hewan', $id)
+                ->delete();
+
+            if (!$deleted) {
+                return redirect()->route('admin.jenis-hewan.index')
+                    ->with('error', 'Data jenis hewan tidak ditemukan.');
+            }
+
+            return redirect()->route('admin.jenis-hewan.index')
+                ->with('success', 'Jenis hewan berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.jenis-hewan.index')
+                ->with('error', 'Gagal menghapus data jenis hewan: ' . $e->getMessage());
+        }
+    }
+
     protected function validateJenisHewan(Request $request, $id = null)
     {
         // data yang bersifat unique
@@ -83,6 +134,27 @@ class JenisHewanController extends Controller
             return true;
         } catch (\Exception $e) {
             throw new \Exception('Gagal menyimpan data jenis hewan: ' . $e->getMessage());
+        }
+    }
+
+    // Helper untuk update data
+    protected function updateJenisHewan($id, array $data)
+    {
+        try {
+            // query builder
+            $updated = DB::table('jenis_hewan')
+                ->where('idjenis_hewan', $id)
+                ->update([
+                    'nama_jenis_hewan' => $this->formatNamaJenisHewan($data['nama_jenis_hewan']),
+                ]);
+
+            if (!$updated) {
+                throw new \Exception('Data jenis hewan tidak ditemukan.');
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            throw new \Exception('Gagal mengupdate data jenis hewan: ' . $e->getMessage());
         }
     }
 
