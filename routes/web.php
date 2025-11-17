@@ -13,7 +13,10 @@ use App\Http\Controllers\Admin\KodeTindakanTerapiController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleUserController;
+use App\Http\Controllers\Admin\TemuDokterController;
 use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Http\Controllers\Admin\DokterController;
+use App\Http\Controllers\Admin\PerawatController;
 use App\Http\Controllers\Pemilik\DashboardPemilikController;
 use App\Http\Controllers\Resepsionis\DashboardResepsionisController;
 use App\Http\Controllers\Dokter\DashboardDokterController;
@@ -39,40 +42,44 @@ Route::middleware(['auth'])->group(function () {
     // ADMIN
     Route::middleware('isAdministrator')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
-    Route::resource('jenis-hewan', JenisHewanController::class)->except(['show']);
+        
+        // Master Data
+        Route::resource('jenis-hewan', JenisHewanController::class)->except(['show']);
         Route::resource('pemilik', PemilikController::class);
         Route::resource('user', UserController::class);
         Route::resource('ras-hewan', RasHewanController::class);
         Route::resource('kategori', KategoriController::class);
-        
         Route::resource('kategori-klinis', KategoriKlinisController::class);
         Route::resource('kode-tindakan-terapi', KodeTindakanTerapiController::class);
         Route::resource('pet', PetController::class);
         Route::resource('role', RoleController::class);
         Route::resource('role-user', RoleUserController::class);
-Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis.index');
-Route::get('/rekam-medis/create', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
-Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
+        Route::resource('temu-dokter', TemuDokterController::class);
+        Route::resource('rekam-medis', RekamMedisController::class);
+        Route::resource('dokter', DokterController::class);
+        Route::resource('perawat', PerawatController::class);
     }); 
 
     // PEMILIK
-    Route::middleware('isPemilik')->group(function () {
-        Route::get('/pemilik/dashboard', [DashboardPemilikController::class, 'index'])->name('pemilik.dashboard');
+    Route::middleware('isPemilik')->prefix('pemilik')->name('pemilik.')->group(function () {
+        Route::get('/dashboard', [DashboardPemilikController::class, 'index'])->name('dashboard');
     });
 
     // RESEPSIONIS
-    Route::middleware('isResepsionis')->group(function () {
-        Route::get('/resepsionis/dashboard', [DashboardResepsionisController::class, 'index'])->name('resepsionis.dashboard');
+    Route::middleware('isResepsionis')->prefix('resepsionis')->name('resepsionis.')->group(function () {
+        Route::get('/dashboard', [DashboardResepsionisController::class, 'index'])->name('dashboard');
+        Route::resource('temu-dokter', TemuDokterController::class);
     });
 
     // DOKTER
-    Route::middleware('isDokter')->group(function () {
-        Route::get('/dokter/dashboard', [DashboardDokterController::class, 'index'])->name('dokter.dashboard');
-        Route::get('/dokter/rekam-medis', [RekamMedisController::class, 'index'])->name('dokter.rekam-medis.index');
+    Route::middleware('isDokter')->prefix('dokter')->name('dokter.')->group(function () {
+        Route::get('/dashboard', [DashboardDokterController::class, 'index'])->name('dashboard');
+        Route::resource('rekam-medis', RekamMedisController::class);
     });
 
     // PERAWAT
-    Route::middleware('isPerawat')->group(function () {
-        Route::get('/perawat/dashboard', [DashboardPerawatController::class, 'index'])->name('perawat.dashboard');
+    Route::middleware('isPerawat')->prefix('perawat')->name('perawat.')->group(function () {
+        Route::get('/dashboard', [DashboardPerawatController::class, 'index'])->name('dashboard');
+        Route::resource('rekam-medis', RekamMedisController::class)->only(['index', 'show']);
     });
 });
