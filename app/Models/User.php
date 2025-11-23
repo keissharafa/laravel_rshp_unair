@@ -38,30 +38,41 @@ class User extends Authenticatable
      *        RELATIONS
      *  ============================ */
 
-    // Relasi ke tabel pemilik (business domain)
     public function pemilik()
     {
         return $this->hasOne(Pemilik::class, 'iduser', 'iduser');
     }
 
-    // Relasi pivot: user bisa punya banyak role
+    public function dokter()
+    {
+        return $this->hasOne(Dokter::class, 'iduser', 'iduser'); // ✅ Ganti jadi iduser
+    }
+
+    public function perawat()
+    {
+        return $this->hasOne(Perawat::class, 'iduser', 'iduser'); // ✅ Ganti jadi iduser
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user', 'iduser', 'idrole')
                     ->withPivot('status');
     }
 
-    // Shortcut: ambil satu role utama (misalnya role pertama)
     public function role()
     {
         return $this->roles()->first();
+    }
+
+    public function roleUser()
+    {
+        return $this->hasOne(RoleUser::class, 'iduser', 'iduser');
     }
 
     /** ============================
      *     AUTHORIZATION HELPERS
      *  ============================ */
 
-    // Cek apakah user punya role tertentu
     public function hasRole($roleName)
     {
         return $this->roles()->where('nama_role', $roleName)->exists();

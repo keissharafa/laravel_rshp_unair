@@ -29,22 +29,20 @@ class PetController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_pet' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:Jantan,Betina',
-            'warna' => 'required|string|max:100',
-            'ciri_khas' => 'nullable|string',
+            'nama' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date|before_or_equal:today',
+            'jenis_kelamin' => 'required|in:J,B', // J=Jantan, B=Betina (sesuai char(1))
+            'warna_tanda' => 'required|string|max:45',
             'idpemilik' => 'required|exists:pemilik,idpemilik',
             'idras_hewan' => 'required|exists:ras_hewan,idras_hewan',
         ]);
 
         try {
             Pet::create([
-                'nama_pet' => $request->nama_pet,
+                'nama' => $request->nama,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'warna' => $request->warna,
-                'ciri_khas' => $request->ciri_khas,
+                'warna_tanda' => $request->warna_tanda,
                 'idpemilik' => $request->idpemilik,
                 'idras_hewan' => $request->idras_hewan,
             ]);
@@ -63,7 +61,12 @@ class PetController extends Controller
 
     public function show($id)
     {
-        $pet = Pet::with(['pemilik', 'rasHewan.jenisHewan', 'rekamMedis'])->findOrFail($id);
+        $pet = Pet::with([
+            'pemilik',
+            'rasHewan.jenisHewan',
+            'temuDokter.rekamMedis' // Update: lewat temu_dokter dulu
+        ])->findOrFail($id);
+        
         return view('admin.pet.show', compact('pet'));
     }
 
@@ -82,22 +85,20 @@ class PetController extends Controller
         $pet = Pet::findOrFail($id);
         
         $request->validate([
-            'nama_pet' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:Jantan,Betina',
-            'warna' => 'required|string|max:100',
-            'ciri_khas' => 'nullable|string',
+            'nama' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date|before_or_equal:today',
+            'jenis_kelamin' => 'required|in:J,B',
+            'warna_tanda' => 'required|string|max:45',
             'idpemilik' => 'required|exists:pemilik,idpemilik',
             'idras_hewan' => 'required|exists:ras_hewan,idras_hewan',
         ]);
 
         try {
             $pet->update([
-                'nama_pet' => $request->nama_pet,
+                'nama' => $request->nama,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'warna' => $request->warna,
-                'ciri_khas' => $request->ciri_khas,
+                'warna_tanda' => $request->warna_tanda,
                 'idpemilik' => $request->idpemilik,
                 'idras_hewan' => $request->idras_hewan,
             ]);
@@ -118,6 +119,13 @@ class PetController extends Controller
     {
         try {
             $pet = Pet::findOrFail($id);
+            
+            // Cek apakah pet punya rekam medis
+            if ($pet->temuDokter()->exists()) {
+                return redirect()->back()
+                    ->with('error', 'Tidak dapat menghapus pet yang sudah memiliki rekam medis!');
+            }
+            
             $pet->delete();
             
             return redirect()->route('admin.pet.index')
@@ -129,5 +137,14 @@ class PetController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal menghapus pet: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Get ras hewan berdasarkan jenis hewan (AJAX)
+     */
+    public function getRasByJenis($idjenis_hewan)
+    {
+        $rasHewans = RasHewan::where('idjenis_hewan', $idjenis_hewan)->get();
+        return response()->json($rasHewans);
     }
 }

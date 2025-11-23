@@ -1,170 +1,120 @@
-@extends('layouts.app')
+@extends('layouts.lte.main')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-clipboard2-pulse"></i> Dashboard Dokter</h4>
-                </div>
 
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        <h5>Selamat datang, {{ Auth::user()->nama }}!</h5>
-                        <p class="mb-0">Anda dapat melihat rekam medis dan data pasien.</p>
-                    </div>
-
-                    <hr>
-
-                    <!-- Statistik Cards -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-3">
-                            <div class="card text-white bg-primary">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-heart-pulse-fill" style="font-size: 2rem;"></i>
-                                    <h3 class="mt-2 mb-0">{{ $totalPasien }}</h3>
-                                    <p class="mb-0">Total Pasien</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-white bg-success">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-file-medical-fill" style="font-size: 2rem;"></i>
-                                    <h3 class="mt-2 mb-0">{{ $totalRekamMedis }}</h3>
-                                    <p class="mb-0">Total Rekam Medis</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-white bg-warning">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-calendar-check" style="font-size: 2rem;"></i>
-                                    <h3 class="mt-2 mb-0">{{ $rekamMedisHariIni }}</h3>
-                                    <p class="mb-0">Rekam Medis Hari Ini</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-white bg-info">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-graph-up" style="font-size: 2rem;"></i>
-                                    <h3 class="mt-2 mb-0">{{ $rekamMedisMingguIni }}</h3>
-                                    <p class="mb-0">Minggu Ini</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Data Rekam Medis Terbaru -->
-                    <h5 class="text-primary mb-3"><i class="bi bi-file-medical"></i> Rekam Medis Terbaru</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead class="table-primary">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tanggal</th>
-                                    <th>Nama Pet</th>
-                                    <th>Pemilik</th>
-                                    <th>Keluhan</th>
-                                    <th>Diagnosa</th>
-                                    <th>Tindakan</th>
-                                    <th>Dokter</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($rekamMedis->take(10) as $rm)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $rm->created_at->format('d/m/Y H:i') }}</td>
-                                    <td>
-                                        <strong>{{ $rm->pet->nama_pet }}</strong><br>
-                                        <small class="text-muted">{{ $rm->pet->rasHewan->nama_ras ?? '-' }}</small>
-                                    </td>
-                                    <td>{{ $rm->pet->pemilik->user->nama ?? '-' }}</td>
-                                    <td>{{ Str::limit($rm->keluhan ?? '-', 50) }}</td>
-                                    <td>{{ Str::limit($rm->diagnosa ?? '-', 50) }}</td>
-                                    <td>{{ Str::limit($rm->tindakan ?? '-', 50) }}</td>
-                                    <td>
-                                        <small>{{ $rm->dokter->nama ?? '-' }}</small>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('admin.rekam-medis.show', $rm->id) }}" 
-                                           class="btn btn-sm btn-info" 
-                                           title="Lihat Detail">
-                                            <i class="bi bi-eye"></i> Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="9" class="text-center text-muted">
-                                        <i class="bi bi-inbox"></i> Belum ada data rekam medis
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Quick Actions - HANYA VIEW -->
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <h5 class="text-primary mb-3"><i class="bi bi-lightning-fill"></i> Quick Actions</h5>
-                            <div class="d-flex gap-2 flex-wrap">
-                                
-                                <a href="{{ route('dokter.rekam-medis.index') }}" class="btn btn-primary">
-                                    <i class="bi bi-list-ul"></i> Lihat Rekam Medis
-                                </a>
-                                
-                                @if(Route::has('dokter.pasien.index'))
-                                <a href="{{ route('dokter.pasien.index') }}" class="btn btn-info">
-                                    <i class="bi bi-heart-fill"></i> Daftar Pasien
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    @if(isset($pemeriksaan) && $pemeriksaan->count() > 0)
-                    <!-- Data Pemeriksaan Hari Ini -->
-                    <hr class="mt-4">
-                    <h5 class="text-success mb-3"><i class="bi bi-calendar2-check"></i> Jadwal Pemeriksaan Hari Ini</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-sm">
-                            <thead class="table-success">
-                                <tr>
-                                    <th>Waktu</th>
-                                    <th>Nama Pet</th>
-                                    <th>Pemilik</th>
-                                    <th>Jenis Pemeriksaan</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($pemeriksaan->where('tanggal_pemeriksaan', \Carbon\Carbon::today())->take(5) as $p)
-                                <tr>
-                                    <td>{{ $p->waktu ?? '-' }}</td>
-                                    <td>{{ $p->pet->nama_pet }}</td>
-                                    <td>{{ $p->pet->pemilik->user->nama ?? '-' }}</td>
-                                    <td>{{ $p->jenis_pemeriksaan }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $p->status == 'selesai' ? 'success' : 'warning' }}">
-                                            {{ ucfirst($p->status) }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    @endif
-
-                </div>
+<!-- Content Header -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard Dokter</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard Dokter</li>
+                </ol>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Main content -->
+<section class="content">
+<div class="container-fluid">
+
+    <!-- Counter Pasien -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalPasienMenunggu }}</h3>
+                    <p>Pasien Menunggu Hari Ini</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user-injured"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Pasien -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Daftar Pasien Hari Ini</h3>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>No Antrian</th>
+                        <th>Nama Hewan</th>
+                        <th>Pemilik</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($rekamMedisHariIni as $rm)
+                    <tr>
+                        <td>{{ $rm->temuDokter->no_urut }}</td>
+                        <td>{{ $rm->temuDokter->pet->nama }}</td>
+                        <td>{{ $rm->temuDokter->pet->pemilik->user->nama }}</td>
+
+                        <td>
+                            <button class="btn btn-primary btn-sm"
+                                data-toggle="collapse"
+                                data-target="#form{{ $rm->idrekam_medis }}">
+                                Periksa
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Form Pemeriksaan -->
+                    <tr class="collapse" id="form{{ $rm->idrekam_medis }}">
+                        <td colspan="4">
+
+                            <form action="{{ route('dokter.rekam-medis.update-isi', $rm->idrekam_medis) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="form-group">
+                                    <label>Temuan Klinis</label>
+                                    <textarea class="form-control" name="temuan_klinis" required>{{ $rm->temuan_klinis }}</textarea>
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    <label>Diagnosa</label>
+                                    <textarea class="form-control" name="diagnosa" required>{{ $rm->diagnosa }}</textarea>
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    <label>Resep / Tindakan</label>
+                                    <textarea class="form-control" name="resep_tindakan">{{ $rm->resep_tindakan }}</textarea>
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    <label>Catatan Dokter</label>
+                                    <textarea class="form-control" name="catatan_dokter">{{ $rm->catatan_dokter }}</textarea>
+                                </div>
+
+                                <button class="btn btn-success mt-3">
+                                    Simpan Pemeriksaan
+                                </button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+</section>
+
 @endsection

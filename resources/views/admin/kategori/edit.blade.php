@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-warning text-white">
-                    <h4 class="mb-0"><i class="fas fa-edit"></i> Edit Kategori</h4>
+                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Kategori</h4>
                 </div>
 
                 <div class="card-body">
@@ -15,13 +15,17 @@
                         @method('PUT')
 
                         <div class="mb-3">
-                            <label for="nama_kategori" class="form-label">Nama Kategori</label>
+                            <label for="nama_kategori" class="form-label">
+                                Nama Kategori <span class="text-danger">*</span>
+                            </label>
                             <input type="text" 
                                    class="form-control @error('nama_kategori') is-invalid @enderror" 
                                    id="nama_kategori" 
                                    name="nama_kategori" 
                                    value="{{ old('nama_kategori', $kategori->nama_kategori) }}" 
-                                   required>
+                                   placeholder="Contoh: Obat, Alat Medis, Vitamin"
+                                   required
+                                   autofocus>
                             
                             @error('nama_kategori')
                                 <div class="invalid-feedback">
@@ -30,26 +34,14 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi</label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" 
-                                      name="deskripsi" 
-                                      rows="4">{{ old('deskripsi', $kategori->deskripsi) }}</textarea>
-                            
-                            @error('deskripsi')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                        <hr>
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-warning">
-                                <i class="fas fa-save"></i> Update
+                            <button type="submit" class="btn btn-warning text-white">
+                                <i class="bi bi-save"></i> Update
                             </button>
                             <a href="{{ route('admin.kategori.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Kembali
+                                <i class="bi bi-arrow-left"></i> Kembali
                             </a>
                         </div>
                     </form>

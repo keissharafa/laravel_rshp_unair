@@ -8,7 +8,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-folder-plus"></i> Tambah Kategori Klinis</h4>
+                    <h4 class="mb-0">Tambah Kategori Klinis</h4>
                 </div>
                 <div class="card-body">
                     @if (session('error'))
@@ -30,7 +30,7 @@
                                    id="nama_kategori_klinis" 
                                    name="nama_kategori_klinis" 
                                    value="{{ old('nama_kategori_klinis') }}" 
-                                   placeholder="Contoh: Terapi, Tindakan" 
+                                   placeholder="Contoh: Penyakit Infeksi, Penyakit Metabolik" 
                                    required
                                    autofocus>
                             @error('nama_kategori_klinis')
@@ -41,30 +41,14 @@
                             <small class="text-muted">Minimal 3 karakter, maksimal 255 karakter</small>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">
-                                Deskripsi <span class="text-muted">(Opsional)</span>
-                            </label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" 
-                                      name="deskripsi" 
-                                      rows="4" 
-                                      placeholder="Masukkan deskripsi kategori klinis (opsional)">{{ old('deskripsi') }}</textarea>
-                            @error('deskripsi')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
                         <hr>
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('admin.kategori-klinis.index') }}" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Kembali
+                                Kembali
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Simpan
+                                Simpan
                             </button>
                         </div>
                     </form>

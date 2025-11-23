@@ -14,4 +14,7 @@ class RasHewan extends Model
     {
         return $this->belongsTo(JenisHewan::class, 'idjenis_hewan', 'idjenis_hewan');
     }
+
+    // mematikan created_at dan updated_at
+    public $timestamps = false;
 }

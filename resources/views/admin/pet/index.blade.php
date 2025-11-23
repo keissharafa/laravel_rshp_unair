@@ -51,16 +51,16 @@
                                 @forelse ($pets as $index => $pet)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td><strong>{{ $pet->nama_pet }}</strong></td>
+                                    <td><strong>{{ $pet->nama }}</strong></td>
                                     <td>{{ \Carbon\Carbon::parse($pet->tanggal_lahir)->format('d/m/Y') }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $pet->jenis_kelamin == 'Jantan' ? 'primary' : 'danger' }}">
-                                            {{ $pet->jenis_kelamin }}
+                                        <span class="badge bg-{{ $pet->jenis_kelamin == 'J' ? 'primary' : 'danger' }}">
+                                            {{ $pet->jenis_kelamin == 'J' ? 'Jantan' : 'Betina' }}
                                         </span>
                                     </td>
-                                    <td>{{ $pet->warna }}</td>
+                                    <td>{{ $pet->warna_tanda }}</td>
                                     <td>{{ $pet->rasHewan->nama_ras ?? '-' }}</td>
-                                    <td>{{ $pet->rasHewan->jenisHewan->nama_jenis ?? '-' }}</td>
+                                    <td>{{ $pet->rasHewan->jenisHewan->nama_jenis_hewan ?? '-' }}</td>
                                     <td>{{ $pet->pemilik->nama_pemilik ?? '-' }}</td>
                                     <td>
                                         <a href="{{ route('admin.pet.show', $pet->idpet) }}" 

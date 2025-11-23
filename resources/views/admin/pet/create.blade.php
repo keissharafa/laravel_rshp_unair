@@ -28,14 +28,14 @@
                                 Nama Pet <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
-                                   class="form-control @error('nama_pet') is-invalid @enderror" 
+                                   class="form-control @error('nama') is-invalid @enderror" 
                                    id="nama_pet" 
-                                   name="nama_pet" 
-                                   value="{{ old('nama_pet') }}" 
+                                   name="nama" 
+                                   value="{{ old('nama') }}" 
                                    placeholder="Masukkan nama pet" 
                                    required
                                    autofocus>
-                            @error('nama_pet')
+                            @error('nama')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -68,8 +68,8 @@
                                     name="jenis_kelamin" 
                                     required>
                                 <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Jantan" {{ old('jenis_kelamin') == 'Jantan' ? 'selected' : '' }}>Jantan</option>
-                                <option value="Betina" {{ old('jenis_kelamin') == 'Betina' ? 'selected' : '' }}>Betina</option>
+                                <option value="J" {{ old('jenis_kelamin') == 'J' ? 'selected' : '' }}>Jantan</option>
+                                <option value="B" {{ old('jenis_kelamin') == 'B' ? 'selected' : '' }}>Betina</option>
                             </select>
                             @error('jenis_kelamin')
                                 <div class="invalid-feedback">
@@ -83,13 +83,13 @@
                                 Warna/Tanda <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
-                                   class="form-control @error('warna') is-invalid @enderror" 
+                                   class="form-control @error('warna_tanda') is-invalid @enderror" 
                                    id="warna" 
-                                   name="warna" 
-                                   value="{{ old('warna') }}" 
+                                   name="warna_tanda" 
+                                   value="{{ old('warna_tanda') }}" 
                                    placeholder="Contoh: Hitam putih, Coklat belang" 
                                    required>
-                            @error('warna')
+                            @error('warna_tanda')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -110,6 +110,7 @@
                                     {{ $message }}
                                 </div>
                             @enderror
+                            <small class="text-muted">Note: Field ini tidak akan disimpan di database</small>
                         </div>
 
                         <hr>

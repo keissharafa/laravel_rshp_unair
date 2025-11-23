@@ -179,6 +179,32 @@
                     <a href="{{ route('admin.role-user.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-maroon">
+                    <div class="inner">
+                        <h3>-</h3>
+                        <p>Data Dokter</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <a href="{{ route('admin.dokter.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-lightblue">
+                    <div class="inner">
+                        <h3>-</h3>
+                        <p>Data Perawat</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user-nurse"></i>
+                    </div>
+                    <a href="{{ route('admin.perawat.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->

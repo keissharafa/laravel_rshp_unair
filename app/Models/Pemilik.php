@@ -18,4 +18,7 @@ class Pemilik extends Model
 {
     return $this->hasMany(Pet::class, 'idpemilik', 'idpemilik');
 }
+
+// mematikan created_at dan updated_at
+    public $timestamps = false;
 }

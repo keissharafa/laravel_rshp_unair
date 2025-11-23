@@ -2,35 +2,43 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RekamMedis extends Model
 {
-    use HasFactory;
-
     protected $table = 'rekam_medis';
     protected $primaryKey = 'idrekam_medis';
-    public $timestamps = false; // karena tabel tidak punya updated_at
+    public $timestamps = false;
 
     protected $fillable = [
+        'idreservasi_dokter',
+        'created_at',
         'anamnesa',
         'temuan_klinis',
         'diagnosa',
-        'idpet',
-        'dokter_pemeriksa',
-        'created_at', 
     ];
 
-    // Relasi ke Pet
-    public function pet()
+    // Relasi ke Temu Dokter
+    public function temuDokter()
     {
-        return $this->belongsTo(Pet::class, 'idpet', 'idpet');
+        return $this->belongsTo(TemuDokter::class, 'idreservasi_dokter', 'idreservasi_dokter');
     }
 
-    // Relasi ke Dokter (User)
-    public function dokter()
+    // Relasi ke Detail Rekam Medis
+    public function detailRekamMedis()
     {
-        return $this->belongsTo(User::class, 'dokter_pemeriksa', 'iduser');
+        return $this->hasMany(DetailRekamMedis::class, 'idrekam_medis', 'idrekam_medis');
+    }
+
+    // Accessor buat akses pet lewat temuDokter
+    public function getPetAttribute()
+    {
+        return $this->temuDokter->pet ?? null;
+    }
+
+    // Accessor buat akses dokter lewat temuDokter
+    public function getDokterAttribute()
+    {
+        return $this->temuDokter->dokter ?? null;
     }
 }

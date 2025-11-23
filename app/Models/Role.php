@@ -9,5 +9,5 @@ class Role extends Model
     protected $table = 'role';
     protected $primaryKey = 'idrole';
     protected $fillable = ['nama_role'];
-    public $timestamps = true;
+    public $timestamps = false;
 }
