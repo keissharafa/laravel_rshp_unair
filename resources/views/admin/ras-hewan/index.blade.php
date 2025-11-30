@@ -23,7 +23,7 @@
                         <th style="width: 5%">No</th>
                         <th>Nama Ras</th>
                         <th>Jenis Hewan</th>
-                        <th style="width: 15%">Aksi</th>
+                        <th style="width: 200px">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,27 +31,29 @@
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $ras->nama_ras }}</td>
-                            <td>{{ $ras->jenisHewan->nama_jenis ?? '-' }}</td>
                             <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    {{-- Tombol Edit --}}
-                                    <a href="{{ route('admin.ras-hewan.edit', $ras->idras_hewan) }}" 
-                                       class="btn btn-sm btn-warning" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                @if($ras->jenisHewan)
+                                    {{ $ras->jenisHewan->nama_jenis_hewan }}
+                                @else
+                                    <span class="text-danger">Belum diset</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('admin.ras-hewan.edit', $ras->idras_hewan) }}" 
+                                   class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
 
-                                    {{-- Tombol Hapus --}}
-                                    <form id="delete-form-{{ $ras->idras_hewan }}"
-                                          action="{{ route('admin.ras-hewan.destroy', $ras->idras_hewan) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Yakin ingin menghapus ras ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                <form action="{{ route('admin.ras-hewan.destroy', $ras->idras_hewan) }}"
+                                      method="POST"
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Yakin ingin menghapus ras ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @empty
@@ -66,7 +68,7 @@
 </div>
 
 <style>
-    .btn-warning i, .btn-danger i {
+    .btn i {
         vertical-align: middle;
     }
 

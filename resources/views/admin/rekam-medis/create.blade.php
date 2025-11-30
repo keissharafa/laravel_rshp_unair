@@ -37,13 +37,13 @@
 
                         <div class="mb-3">
                             <label for="idreservasi_dokter" class="form-label">
-                                Pilih Pasien (No. Antrian) <span class="text-danger">*</span>
+                                Pilih Pasien <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select @error('idreservasi_dokter') is-invalid @enderror" 
+                            <select class="form-select select2 @error('idreservasi_dokter') is-invalid @enderror" 
                                     id="idreservasi_dokter" 
                                     name="idreservasi_dokter"
                                     required>
-                                <option value="">-- Pilih Pasien --</option>
+                                <option value="">-- Cari Pasien --</option>
                                 @foreach($reservasiList as $reservasi)
                                     <option value="{{ $reservasi->idreservasi_dokter }}" 
                                         {{ old('idreservasi_dokter') == $reservasi->idreservasi_dokter ? 'selected' : '' }}>
@@ -54,7 +54,7 @@
                             @error('idreservasi_dokter')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">Pilih nomor antrian pasien yang akan diperiksa</small>
+                            <small class="text-muted">Ketik nomor antrian atau nama hewan untuk mencari</small>
                         </div>
 
                         <div class="mb-3">
@@ -110,12 +110,13 @@
                                    class="form-control @error('dokter_pemeriksa') is-invalid @enderror" 
                                    id="dokter_pemeriksa" 
                                    name="dokter_pemeriksa"
-                                   value="{{ old('dokter_pemeriksa') }}"
+                                   value="{{ old('dokter_pemeriksa', Auth::user()->nama ?? '') }}"
                                    placeholder="Masukkan nama dokter pemeriksa"
                                    required>
                             @error('dokter_pemeriksa')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <small class="text-muted">Otomatis terisi dari user yang login</small>
                         </div>
 
                         <div class="d-flex gap-2">
@@ -141,5 +142,65 @@
     .btn i {
         vertical-align: middle;
     }
+
+    /* Select2 custom styling */
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px;
+        padding-left: 12px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--single {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .select2-dropdown {
+        border: 1px solid #ced4da;
+    }
+
+    .is-invalid + .select2-container--default .select2-selection--single {
+        border-color: #dc3545;
+    }
 </style>
 @endsection
+
+@push('styles')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+@endpush
+
+@push('scripts')
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 untuk pasien selection
+        $('#idreservasi_dokter').select2({
+            theme: 'bootstrap-5',
+            placeholder: '-- Cari Pasien --',
+            allowClear: true,
+            width: '100%',
+            language: {
+                noResults: function() {
+                    return "Pasien tidak ditemukan";
+                },
+                searching: function() {
+                    return "Mencari...";
+                }
+            }
+        });
+    });
+</script>
+@endpush

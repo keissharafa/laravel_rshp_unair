@@ -15,7 +15,6 @@
 
                 <div class="card-body">
 
-                    {{-- Error Messages --}}
                     @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show">
                             <strong>Terdapat kesalahan:</strong>
@@ -36,20 +35,18 @@
                         {{-- ID USER --}}
                         <div class="mb-3">
                             <label class="form-label">ID User</label>
-                            <input type="text" class="form-control"
-                                   value="{{ $user->iduser }}" disabled readonly>
-                            <small class="text-muted">ID User tidak dapat diubah</small>
+                            <input type="text" class="form-control" value="{{ $user->iduser }}" disabled>
                         </div>
 
                         {{-- NAMA --}}
                         <div class="mb-3">
                             <label class="form-label">Nama <span class="text-danger">*</span></label>
                             <input type="text"
-                                   class="form-control @error('nama') is-invalid @enderror"
                                    name="nama"
+                                   class="form-control @error('nama') is-invalid @enderror"
                                    value="{{ old('nama', $user->nama) }}"
-                                   placeholder="Masukkan nama lengkap"
                                    required>
+
                             @error('nama')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -59,47 +56,45 @@
                         <div class="mb-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email"
-                                   class="form-control @error('email') is-invalid @enderror"
                                    name="email"
+                                   class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $user->email) }}"
-                                   placeholder="contoh@email.com"
                                    required>
+
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        {{-- PASSWORD BARU --}}
+                        {{-- PASSWORD --}}
                         <div class="mb-3">
                             <label class="form-label">Password Baru</label>
                             <input type="password"
-                                   class="form-control @error('password') is-invalid @enderror"
                                    name="password"
+                                   class="form-control @error('password') is-invalid @enderror"
                                    placeholder="Kosongkan jika tidak ingin mengubah password">
+
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">
-                                Kosongkan jika tidak ingin mengubah password
-                            </small>
                         </div>
 
                         {{-- KONFIRMASI PASSWORD --}}
                         <div class="mb-3">
-                            <label class="form-label">Konfirmasi Password Baru</label>
+                            <label class="form-label">Konfirmasi Password</label>
                             <input type="password"
-                                   class="form-control"
                                    name="password_confirmation"
+                                   class="form-control"
                                    placeholder="Masukkan ulang password baru">
                         </div>
 
                         {{-- ROLE --}}
                         <div class="mb-3">
-                            <label class="form-label">Role <span class="text-danger">*</span></label>
+                            <label class="form-label">Role</label>
 
                             @foreach($roles as $role)
                                 <div class="form-check">
-                                    <input class="form-check-input @error('roles') is-invalid @enderror"
+                                    <input class="form-check-input"
                                            type="checkbox"
                                            name="roles[]"
                                            value="{{ $role->idrole }}"
@@ -110,10 +105,6 @@
                                     </label>
                                 </div>
                             @endforeach
-
-                            @error('roles')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         {{-- BUTTON --}}
@@ -134,9 +125,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .form-label { font-weight: 500; }
-    .btn i { vertical-align: middle; }
-</style>
 @endsection

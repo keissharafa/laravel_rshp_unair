@@ -131,8 +131,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('isPerawat')->prefix('perawat')->name('perawat.')->group(function () {
         Route::get('/dashboard', [DashboardPerawatController::class, 'index'])->name('dashboard');
 
-        // Perawat hanya index & show rekam medis
-        Route::resource('rekam-medis', RekamMedisController::class)->only(['index', 'show']);
+    Route::put('/rekam-medis/{id}', [PerawatController::class, 'updateRekam'])
+    ->name('rekam-medis.update');
     });
 
 });

@@ -33,9 +33,8 @@
                             <table class="table table-hover table-bordered align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th width="5%" class="text-center">No</th>
-                                        <th width="25%">Nama Kategori</th>
-                                        <th width="50%">Deskripsi</th>
+                                        <th width="10%" class="text-center">No</th>
+                                        <th width="70%">Nama Kategori</th>
                                         <th width="20%" class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -44,12 +43,11 @@
                                     <tr>
                                         <td class="text-center">{{ $index + 1 }}</td>
                                         <td><strong>{{ $kategori->nama_kategori }}</strong></td>
-                                        <td>{{ $kategori->deskripsi ?? '-' }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('admin.kategori.edit', $kategori->idkategori) }}" 
                                                class="btn btn-sm btn-warning text-white me-1" 
                                                title="Edit">
-                                                Edit
+                                                <i class="bi bi-pencil"></i> Edit
                                             </a>
                                             <form action="{{ route('admin.kategori.destroy', $kategori->idkategori) }}" 
                                                   method="POST" 
@@ -60,7 +58,7 @@
                                                 <button type="submit" 
                                                         class="btn btn-sm btn-danger" 
                                                         title="Hapus">
-                                                    Hapus
+                                                    <i class="bi bi-trash"></i> Hapus
                                                 </button>
                                             </form>
                                         </td>

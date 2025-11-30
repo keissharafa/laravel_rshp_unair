@@ -11,52 +11,33 @@ use Illuminate\Support\Facades\Log;
 
 class DashboardDokterController extends Controller
 {
-    /**
-     * Dashboard Dokter
-     */
+    // Dashboard dokter — daftar antrian + form pemeriksaan langsung di dashboard
     public function index()
     {
-        $dokter_id = Auth::id(); // ID user yang login sebagai dokter
-        
+        // Pasien yang masih menunggu diperiksa
         $pasienMenunggu = TemuDokter::with(['pet.pemilik.user', 'rekamMedis'])
-            ->whereDate('waktu_daftar', today())
+            ->whereDate('waktu_daftar', today()) // FIX created_at → waktu_daftar
             ->where('status', 'menunggu')
             ->orderBy('no_urut', 'asc')
             ->get();
-        
-        // Rekam medis yang sudah diperiksa hari ini oleh dokter ini
+
+        // Rekam medis yang sudah diperiksa dokter hari ini
         $rekamMedisHariIni = RekamMedis::with('temuDokter.pet')
             ->where('dokter_pemeriksa', Auth::user()->nama)
-            ->whereDate('created_at', today())
-            ->orderBy('created_at', 'desc')
+            ->whereDate('waktu_daftar', today()) // created_at salah → FIX
+            ->orderBy('idrekam_medis', 'desc')
             ->get();
-        
-        // Statistik
-        $totalPasienMenunggu = $pasienMenunggu->count();
-        $totalSudahDiperiksa = $rekamMedisHariIni->count();
-        
-        return view('dokter.dashboard_dokter', compact(
-            'pasienMenunggu', 
-            'rekamMedisHariIni', 
-            'totalPasienMenunggu', 
-            'totalSudahDiperiksa'
-        ));
+
+        return view('dokter.dashboard_dokter', [
+            'pasienMenunggu' => $pasienMenunggu,
+            'rekamMedisHariIni' => $rekamMedisHariIni,
+            'totalPasienMenunggu' => $pasienMenunggu->count(),
+            'totalSudahDiperiksa' => $rekamMedisHariIni->count(),
+        ]);
     }
-    
-    /**
-     * Form untuk dokter isi detail rekam medis
-     */
-    public function detailRekamMedis($idrekam_medis)
-    {
-        $rekamMedis = RekamMedis::with('temuDokter.pet.pemilik.user')->findOrFail($idrekam_medis);
-        
-        return view('dokter.detail-rekam-medis', compact('rekamMedis'));
-    }
-    
-    /**
-     * Update detail rekam medis oleh dokter
-     */
-    public function updateDetailRekamMedis(Request $request, $idrekam_medis)
+
+    // Dokter melakukan update temuan klinis + diagnosa
+    public function updateRekamMedis(Request $request, $id)
     {
         $request->validate([
             'temuan_klinis' => 'required|string',
@@ -64,42 +45,29 @@ class DashboardDokterController extends Controller
             'resep_tindakan' => 'nullable|string',
             'catatan_dokter' => 'nullable|string',
         ]);
-        
+
         try {
-            $rekamMedis = RekamMedis::findOrFail($idrekam_medis);
-            
+            $rekamMedis = RekamMedis::findOrFail($id);
+
             $rekamMedis->update([
                 'temuan_klinis' => $request->temuan_klinis,
                 'diagnosa' => $request->diagnosa,
                 'resep_tindakan' => $request->resep_tindakan,
                 'catatan_dokter' => $request->catatan_dokter,
-                'dokter_pemeriksa' => Auth::user()->nama, // Update nama dokter
+                'dokter_pemeriksa' => Auth::user()->nama, // dokter yang memeriksa
             ]);
-            
-            // Update status temu dokter jadi 'selesai'
+
+            // Update status temu_dokter → selesai
             if ($rekamMedis->temuDokter) {
                 $rekamMedis->temuDokter->update(['status' => 'selesai']);
             }
-            
-            return redirect()->route('dokter.dashboard_dokter')
-                ->with('success', 'Detail rekam medis berhasil disimpan!');
-                
+
+            return redirect()->route('dokter.dashboard')
+                ->with('success', 'Pemeriksaan berhasil disimpan!');
         } catch (\Exception $e) {
-            Log::error('Error updating detail rekam medis: ' . $e->getMessage());
-            
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Gagal menyimpan detail rekam medis: ' . $e->getMessage());
+            Log::error('Error updating rekam medis (dokter): '.$e->getMessage());
+
+            return back()->withInput()->with('error', 'Terjadi kesalahan:'.$e->getMessage());
         }
-    }
-    
-    /**
-     * Lihat detail lengkap rekam medis (read-only)
-     */
-    public function lihatRekamMedis($idrekam_medis)
-    {
-        $rekamMedis = RekamMedis::with('temuDokter.pet.pemilik.user')->findOrFail($idrekam_medis);
-        
-        return view('dokter.lihat-rekam-medis', compact('rekamMedis'));
     }
 }

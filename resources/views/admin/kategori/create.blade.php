@@ -41,22 +41,6 @@
                             <small class="text-muted">Minimal 3 karakter, maksimal 255 karakter</small>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">
-                                Deskripsi <span class="text-muted">(Opsional)</span>
-                            </label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" 
-                                      name="deskripsi" 
-                                      rows="4" 
-                                      placeholder="Masukkan deskripsi kategori (opsional)">{{ old('deskripsi') }}</textarea>
-                            @error('deskripsi')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
                         <hr>
 
                         <div class="d-flex justify-content-between">

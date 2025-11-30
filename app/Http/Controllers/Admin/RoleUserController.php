@@ -92,7 +92,7 @@ class RoleUserController extends Controller
      */
     public function edit($id)
     {
-        $roleUser = RoleUser::findOrFail($id);
+        $roleUser = RoleUser::with(['role', 'user'])->findOrFail($id);
         $roles = Role::all();
         $users = User::all();
         

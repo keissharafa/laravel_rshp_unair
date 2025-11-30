@@ -14,10 +14,10 @@ use App\Models\KodeTindakanTerapi;
 use App\Models\Pemilik;
 use App\Models\Pet;
 use App\Models\RasHewan;
-use App\Models\Dokter; // ✅ Tambah import
-use App\Models\Perawat; // ✅ Tambah import
-use Illuminate\Support\Facades\Hash; // ✅ Tambah import
-use Illuminate\Support\Facades\DB; // ✅ Tambah import
+use App\Models\Dokter; 
+use App\Models\Perawat; 
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\DB; 
 
 class DashboardAdminController extends Controller
 {
@@ -42,12 +42,12 @@ class DashboardAdminController extends Controller
             'users', 'roles', 'pemiliks', 'pets', 
             'jenisHewans', 'rasHewans', 'kategoris', 
             'kategoriKlinis', 'kodeTindakanTerapis',
-            'dokters', 'perawats' // ✅ Tambah ini
+            'dokters', 'perawats' 
         ));
     }
 
     // ========================================
-    //    ✅ METHOD DOKTER UNTUK TRANSAKSI (CRUD)
+    //   METHOD DOKTER UNTUK TRANSAKSI (CRUD)
     // ========================================
 
     public function dataDokter()

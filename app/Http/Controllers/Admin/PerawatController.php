@@ -122,6 +122,23 @@ class PerawatController extends Controller
         }
     }
 
+    public function updateRekam(Request $request, $id)
+    {
+    $request->validate([
+        'anamnesa' => 'required|string',
+        'keluhan' => 'required|string',
+    ]);
+
+    $rm = RekamMedis::findOrFail($id);
+
+    $rm->anamnesa = $request->anamnesa;
+    $rm->keluhan = $request->keluhan;
+    $rm->save();
+
+    return back()->with('success', 'Anamnesa & keluhan berhasil diperbarui!');
+}
+
+
     public function destroy(string $id)
     {
         DB::beginTransaction();
